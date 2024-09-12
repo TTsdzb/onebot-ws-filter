@@ -4,6 +4,7 @@ import * as z from "zod";
 
 export const configSchema = z.object({
   logLevel: z.number().int().min(0).max(6).default(3),
+  logTemplateStr: z.string().default("[{{dateIsoStr}}][{{logLevelName}}] "),
   listenPort: z.number().int().min(1).max(65535),
   serverUrl: z.string().url(),
   filteredGroup: z.number().int().array(),

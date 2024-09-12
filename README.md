@@ -13,9 +13,6 @@
 请手动创建 `config.yml`：
 
 ```yaml
-# 日志等级，默认为 3
-# 0: silly, 1: trace, 2: debug, 3: info, 4: warn, 5: error, 6: fatal
-logLevel: 3
 # 过滤器监听的端口，用于接受适配器（Bot 框架）连接
 listenPort: 8000
 # Onebot 实现地址，也就是原先在 Bot 框架那里填的地址
@@ -25,6 +22,17 @@ filteredGroup:
   - 123456
   - 456789
   - 789123
+```
+
+以下配置项是可选的，可以不写，请按需要添加：
+
+```yaml
+# 日志等级，可不填，默认为 3
+# 0: silly, 1: trace, 2: debug, 3: info, 4: warn, 5: error, 6: fatal
+logLevel: 3
+# 日志模板
+# 请参考 https://tslog.js.org/#/?id=pretty-templates-and-styles-color-settings
+logTemplateStr: "[{{dateIsoStr}}][{{logLevelName}}] "
 ```
 
 随后将适配器端所要连接的地址修改为过滤器监听的地址。例如，假设你设置的 `listenPort` 为 `8000` 且过滤器和 Bot 运行在**同一台电脑**，那么你应该填 `ws://127.0.0.1:8000`。

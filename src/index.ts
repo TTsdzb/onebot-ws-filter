@@ -5,7 +5,9 @@ import { readConfig } from "./config";
 
 const config = readConfig();
 
-const logger = new Logger();
+const logger = new Logger({
+  prettyLogTemplate: config.logTemplateStr,
+});
 const server = new WebSocket.Server({ port: config.listenPort });
 
 // Trace
