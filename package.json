@@ -2,6 +2,7 @@
   "name": "onebot-ws-filter",
   "version": "0.0.1",
   "packageManager": "yarn@4.4.1",
+  "license": "MIT",
   "scripts": {
     "build": "yarn exec tsc",
     "start": "node ./out/index.js",
