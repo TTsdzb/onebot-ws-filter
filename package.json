@@ -1,0 +1,23 @@
+{
+  "name": "onebot-ws-filter",
+  "version": "0.0.1",
+  "packageManager": "yarn@4.4.1",
+  "scripts": {
+    "build": "yarn exec tsc",
+    "start": "node ./out/index.js",
+    "dev": "yarn build && yarn start"
+  },
+  "devDependencies": {
+    "@types/js-yaml": "^4",
+    "@types/ws": "^8",
+    "prettier": "^3.3.3"
+  },
+  "dependencies": {
+    "@types/node": "^22.5.4",
+    "js-yaml": "^4.1.0",
+    "tslog": "^4.9.3",
+    "typescript": "^5.6.2",
+    "ws": "^8.18.0",
+    "zod": "^3.23.8"
+  }
+}
