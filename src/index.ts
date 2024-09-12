@@ -9,7 +9,7 @@ const logger = new Logger();
 const server = new WebSocket.Server({ port: config.listenPort });
 
 // Trace
-logger.settings.minLevel = 1;
+logger.settings.minLevel = config.logLevel;
 
 const shouldForwardEvent = (event: any): boolean => {
   if (event["post_type"] !== "message") return true;
@@ -29,7 +29,9 @@ server.on("connection", (clientSocket) => {
   });
 
   serverSocket.on("message", (data) => {
-    const event = JSON.parse(data.toString());
+    const data_str = data.toString();
+    logger.trace("Incoming server message: ", data_str);
+    const event = JSON.parse(data_str);
 
     // 过滤条件
     if (shouldForwardEvent(event)) {
@@ -40,6 +42,7 @@ server.on("connection", (clientSocket) => {
   });
 
   clientSocket.on("message", (data) => {
+    logger.trace("Incoming client message: ", data.toString());
     serverSocket.send(data);
   });
 

@@ -13,6 +13,9 @@
 请手动创建 `config.yml`：
 
 ```yaml
+# 日志等级，默认为 3
+# 0: silly, 1: trace, 2: debug, 3: info, 4: warn, 5: error, 6: fatal
+logLevel: 3
 # 过滤器监听的端口，用于接受适配器（Bot 框架）连接
 listenPort: 8000
 # Onebot 实现地址，也就是原先在 Bot 框架那里填的地址
