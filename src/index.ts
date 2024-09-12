@@ -7,6 +7,7 @@ const config = readConfig();
 
 const logger = new Logger({
   prettyLogTemplate: config.logTemplateStr,
+  prettyLogTimeZone: "local",
 });
 const server = new WebSocket.Server({ port: config.listenPort });
 
