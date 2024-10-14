@@ -6,22 +6,36 @@
 
 本项目通过在实现端与适配器之间引入中间人的方式对 Onebot 的事件下发进行过滤。
 
-目前仅支持正向 WebSocket、`/` 接口，且只有群聊消息黑名单功能。后续可能考虑适配 go-cqhttp 原有的事件过滤配置，或提供另一套完善的配置机制。
+目前仅支持 WebSocket、`/` 接口，且只有群聊消息黑名单功能。后续可能考虑适配 go-cqhttp 原有的事件过滤配置，或提供另一套完善的配置机制。
 
 ## 配置
 
 请手动创建 `config.yml`：
 
 ```yaml
-# 过滤器监听的端口，用于接受适配器（Bot 框架）连接
-listenPort: 8000
-# Onebot 实现地址，也就是原先在 Bot 框架那里填的地址
-serverUrl: "ws://127.0.0.1:8081"
-# 群组黑名单，在该名单内的群聊的消息会被丢弃，填写群号
-filteredGroup:
-  - 123456
-  - 456789
-  - 789123
+# 过滤器数组，每项为一个过滤器
+filters:
+  - # 过滤器工作方式，必须为 `forward` 或 `reverse`
+    type: "forward"
+    # 过滤器名称，用于在日志中标识
+    name: "forward-example"
+    # 过滤器监听的端口，用于接受适配器（Bot 框架）连接
+    forwardListenPort: 8000
+    # Onebot 实现地址，也就是原先在 Bot 框架那里填的地址
+    forwardServerUrl: "ws://192.168.1.5:8081"
+    # 群组黑名单，在该名单内的群聊的消息会被丢弃，填写群号
+    filteredGroup: []
+  - # 过滤器工作方式，必须为 `forward` 或 `reverse`
+    type: "reverse"
+    # 过滤器名称，用于在日志中标识
+    name: "reverse-example"
+    # 过滤器监听的端口，用于接受 Onebot 实现连接
+    reverseListenPort: 8001
+    reverseListenPath: "/"
+    # 适配器（Bot 框架）地址
+    reverseServerUrl: "ws://192.168.1.5:8081"
+    # 群组黑名单，在该名单内的群聊的消息会被丢弃，填写群号
+    filteredGroup: []
 ```
 
 以下配置项是可选的，可以不写，请按需要添加：
@@ -35,7 +49,7 @@ logLevel: 3
 logTemplateStr: "[{{dateIsoStr}}][{{logLevelName}}] "
 ```
 
-随后将适配器端所要连接的地址修改为过滤器监听的地址。例如，假设你设置的 `listenPort` 为 `8000` 且过滤器和 Bot 运行在**同一台电脑**，那么你应该填 `ws://127.0.0.1:8000`。
+随后将适配器端所要连接的地址修改为过滤器监听的地址。以正向 Websocket 为例，假设你设置的 `forwardListenPort` 为 `8000` 且过滤器和 Bot 运行在**同一台电脑**，那么你应该填 `ws://127.0.0.1:8000`。
 
 ## 构建
 
