@@ -38,9 +38,17 @@ export class ForwardWsFilter extends Filter {
       this.logger.info("Client connected");
 
       const serverSocket = new WebSocket(config.forwardServerUrl);
+      let serverConnEstablished = false;
+      let messageQueue: WebSocket.RawData[] = [];
 
       serverSocket.on("open", () => {
         this.logger.info("Connected to server");
+
+        messageQueue.forEach((data) => {
+          serverSocket.send(data);
+        });
+        messageQueue = [];
+        serverConnEstablished = true;
       });
 
       serverSocket.on("message", (data) => {
@@ -58,7 +66,9 @@ export class ForwardWsFilter extends Filter {
 
       clientSocket.on("message", (data) => {
         this.logger.trace("Incoming client message: ", data.toString());
-        serverSocket.send(data);
+        serverConnEstablished
+          ? serverSocket.send(data)
+          : messageQueue.push(data);
       });
 
       clientSocket.on("close", () => {
@@ -93,9 +103,17 @@ export class ReverseWsFilter extends Filter {
       const serverSocket = new WebSocket(config.reverseServerUrl, {
         headers: request.headers,
       });
+      let serverConnEstablished = false;
+      let messageQueue: WebSocket.RawData[] = [];
 
       serverSocket.on("open", () => {
         this.logger.info("Connected to server");
+
+        messageQueue.forEach((data) => {
+          serverSocket.send(data);
+        });
+        messageQueue = [];
+        serverConnEstablished = true;
       });
 
       serverSocket.on("message", (data) => {
@@ -110,7 +128,9 @@ export class ReverseWsFilter extends Filter {
 
         // 过滤条件
         if (this.filter(event)) {
-          serverSocket.send(data);
+          serverConnEstablished
+            ? serverSocket.send(data)
+            : messageQueue.push(data);
         } else {
           this.logger.debug("Event filtered:", event);
         }
