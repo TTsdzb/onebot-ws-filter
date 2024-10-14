@@ -87,10 +87,12 @@ export class ReverseWsFilter extends Filter {
       path: config.reverseListenPath,
     });
 
-    server.on("connection", (clientSocket) => {
+    server.on("connection", (clientSocket, request) => {
       this.logger.info("Client connected");
 
-      const serverSocket = new WebSocket(config.reverseServerUrl);
+      const serverSocket = new WebSocket(config.reverseServerUrl, {
+        headers: request.headers,
+      });
 
       serverSocket.on("open", () => {
         this.logger.info("Connected to server");
