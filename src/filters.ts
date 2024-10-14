@@ -99,18 +99,18 @@ export class ReverseWsFilter extends Filter {
       });
 
       serverSocket.on("message", (data) => {
-        this.logger.trace("Incoming client message: ", data.toString());
-        serverSocket.send(data);
+        this.logger.trace("Incoming server message: ", data.toString());
+        clientSocket.send(data);
       });
 
       clientSocket.on("message", (data) => {
         const data_str = data.toString();
-        this.logger.trace("Incoming server message: ", data_str);
+        this.logger.trace("Incoming client message: ", data_str);
         const event = JSON.parse(data_str);
 
         // 过滤条件
         if (this.filter(event)) {
-          clientSocket.send(data);
+          serverSocket.send(data);
         } else {
           this.logger.debug("Event filtered:", event);
         }
