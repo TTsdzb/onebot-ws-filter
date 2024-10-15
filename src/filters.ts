@@ -12,19 +12,39 @@ import { getLogger } from "./utils";
 export abstract class Filter {
   base_config: BaseFilterConfig;
   logger: Logger<unknown>;
+  messageRegex: RegExp;
 
   constructor(config: BaseFilterConfig, logging_config: LoggingConfig) {
     this.base_config = config;
     this.logger = getLogger(config.name, logging_config);
+    this.messageRegex = new RegExp(this.base_config.messageFilter.regex);
   }
 
+  /**
+   * Determine whether an event should pass the filter.
+   *
+   * If not, return `false`.
+   * @param event Event need to be checked
+   * @returns Whether the event should pass
+   */
   protected filter(event: any): boolean {
     if (event["post_type"] !== "message") return true;
-    if (event["message_type"] !== "group") return true;
-    if (!this.base_config.filteredGroup.includes(event["group_id"]))
-      return true;
+    if (this.base_config.messageFilter.mode === "blacklist") {
+      if (this.messageRegex.test(event["raw_message"])) return false;
+    } else if (this.base_config.messageFilter.mode === "whitelist") {
+      if (!this.messageRegex.test(event["raw_message"])) return false;
+    }
 
-    return false;
+    if (event["message_type"] !== "group") return true;
+    if (this.base_config.groupFilter.mode === "blacklist") {
+      if (this.base_config.groupFilter.groups.includes(event["group_id"]))
+        return false;
+    } else if (this.base_config.groupFilter.mode === "whitelist") {
+      if (!this.base_config.groupFilter.groups.includes(event["group_id"]))
+        return false;
+    }
+
+    return true;
   }
 }
 

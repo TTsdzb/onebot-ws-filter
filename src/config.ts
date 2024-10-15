@@ -4,7 +4,14 @@ import * as z from "zod";
 
 export const baseFilterConfigSchema = z.object({
   name: z.string(),
-  filteredGroup: z.number().int().array(),
+  groupFilter: z.object({
+    mode: z.string(),
+    groups: z.number().int().array().default([]),
+  }),
+  messageFilter: z.object({
+    mode: z.string(),
+    regex: z.string().default(""),
+  }),
 });
 
 export const forwardWsFilterConfigSchema = z

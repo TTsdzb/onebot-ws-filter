@@ -14,6 +14,7 @@
 
 ```yaml
 # 过滤器数组，每项为一个过滤器
+# 过滤器数组，每项为一个过滤器
 filters:
   - # 过滤器工作方式，必须为 `forward` 或 `reverse`
     type: "forward"
@@ -23,8 +24,24 @@ filters:
     forwardListenPort: 8000
     # Onebot 实现地址，也就是原先在 Bot 框架那里填的地址
     forwardServerUrl: "ws://192.168.1.5:8081"
-    # 群组黑名单，在该名单内的群聊的消息会被丢弃，填写群号
-    filteredGroup: []
+    # 群组过滤器
+    groupFilter:
+      # 工作方式
+      # 如果为 "blacklist"，在该名单内的群聊的消息会被丢弃
+      # 如果为 "whitelist"，不在该名单内的群聊的消息会被丢弃
+      # 任意其他值将关闭该功能
+      mode: "blacklist"
+      # 群组列表
+      groups: []
+    # raw_message 过滤器
+    messageFilter:
+      # 工作方式
+      # 如果为 "blacklist"，符合该正则的消息（不论群聊和私聊）会被丢弃
+      # 如果为 "whitelist"，不符合该正则的消息（不论群聊和私聊）会被丢弃
+      # 任意其他值将关闭该功能
+      mode: "whitelist"
+      # 消息正则
+      regex: ".*"
   - # 过滤器工作方式，必须为 `forward` 或 `reverse`
     type: "reverse"
     # 过滤器名称，用于在日志中标识
@@ -34,8 +51,26 @@ filters:
     reverseListenPath: "/"
     # 适配器（Bot 框架）地址
     reverseServerUrl: "ws://192.168.1.5:8081"
-    # 群组黑名单，在该名单内的群聊的消息会被丢弃，填写群号
-    filteredGroup: []
+    # 群组过滤器
+    groupFilter:
+      # 工作方式
+      # 如果为 "blacklist"，在该名单内的群聊的消息会被丢弃
+      # 如果为 "whitelist"，不在该名单内的群聊的消息会被丢弃
+      # 任意其他值将关闭该功能
+      mode: "blacklist"
+      # 群组列表
+      groups:
+        - 111222333
+        - 444555666
+    # raw_message 过滤器
+    messageFilter:
+      # 工作方式
+      # 如果为 "blacklist"，符合该正则的消息（不论群聊和私聊）会被丢弃
+      # 如果为 "whitelist"，不符合该正则的消息（不论群聊和私聊）会被丢弃
+      # 任意其他值将关闭该功能
+      mode: "whitelist"
+      # 消息正则
+      regex: "^!.+"
 ```
 
 以下配置项是可选的，可以不写，请按需要添加：
