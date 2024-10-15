@@ -6,14 +6,13 @@
 
 本项目通过在实现端与适配器之间引入中间人的方式对 Onebot 的事件下发进行过滤。
 
-目前仅支持 WebSocket、`/` 接口，且只有群聊消息黑名单功能。后续可能考虑适配 go-cqhttp 原有的事件过滤配置，或提供另一套完善的配置机制。
+目前仅支持 WebSocket、`/` 接口，且只能筛选 raw_message 和群聊的群号。后续可能考虑适配 go-cqhttp 原有的事件过滤配置，或提供另一套完善的配置机制。
 
 ## 配置
 
 请手动创建 `config.yml`：
 
 ```yaml
-# 过滤器数组，每项为一个过滤器
 # 过滤器数组，每项为一个过滤器
 filters:
   - # 过滤器工作方式，必须为 `forward` 或 `reverse`
@@ -31,7 +30,7 @@ filters:
       # 如果为 "whitelist"，不在该名单内的群聊的消息会被丢弃
       # 任意其他值将关闭该功能
       mode: "blacklist"
-      # 群组列表
+      # 群组列表，不填时默认为空数组
       groups: []
     # raw_message 过滤器
     messageFilter:
@@ -40,7 +39,7 @@ filters:
       # 如果为 "whitelist"，不符合该正则的消息（不论群聊和私聊）会被丢弃
       # 任意其他值将关闭该功能
       mode: "whitelist"
-      # 消息正则
+      # 消息正则，不填时默认为空字符串
       regex: ".*"
   - # 过滤器工作方式，必须为 `forward` 或 `reverse`
     type: "reverse"
@@ -58,7 +57,7 @@ filters:
       # 如果为 "whitelist"，不在该名单内的群聊的消息会被丢弃
       # 任意其他值将关闭该功能
       mode: "blacklist"
-      # 群组列表
+      # 群组列表，不填时默认为空数组
       groups:
         - 111222333
         - 444555666
@@ -69,7 +68,7 @@ filters:
       # 如果为 "whitelist"，不符合该正则的消息（不论群聊和私聊）会被丢弃
       # 任意其他值将关闭该功能
       mode: "whitelist"
-      # 消息正则
+      # 消息正则，不填时默认为空字符串
       regex: "^!.+"
 ```
 
