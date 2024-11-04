@@ -9,6 +9,12 @@ import {
 } from "./config";
 import { getLogger } from "./utils";
 
+const errorHandler = (logger: Logger<unknown>, side: string) => {
+  return (err: Error) => {
+    logger.error(`Encountered error on ${side}:`, err);
+  };
+};
+
 export abstract class Filter {
   base_config: BaseFilterConfig;
   logger: Logger<unknown>;
@@ -53,11 +59,13 @@ export class ForwardWsFilter extends Filter {
     super(config, logging_config);
 
     const server = new WebSocket.Server({ port: config.forwardListenPort });
+    server.on("error", errorHandler(this.logger, "client side"));
 
     server.on("connection", (clientSocket) => {
       this.logger.info("Client connected");
 
       const serverSocket = new WebSocket(config.forwardServerUrl);
+      serverSocket.on("error", errorHandler(this.logger, "server side"));
       let serverConnEstablished = false;
       let messageQueue: string[] = [];
 
@@ -117,6 +125,7 @@ export class ReverseWsFilter extends Filter {
       port: config.reverseListenPort,
       path: config.reverseListenPath,
     });
+    server.on("error", errorHandler(this.logger, "client side"));
 
     server.on("connection", (clientSocket, request) => {
       this.logger.info("Client connected");
@@ -124,6 +133,7 @@ export class ReverseWsFilter extends Filter {
       const serverSocket = new WebSocket(config.reverseServerUrl, {
         headers: request.headers,
       });
+      serverSocket.on("error", errorHandler(this.logger, "server side"));
       let serverConnEstablished = false;
       let messageQueue: string[] = [];
 
