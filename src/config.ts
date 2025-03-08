@@ -53,7 +53,9 @@ export type LoggingConfig = z.infer<typeof loggingConfigSchema>;
 export type Config = z.infer<typeof configSchema>;
 
 export const readConfig = (): Config => {
-  const fileContents = fs.readFileSync("./config.yml", { encoding: "utf-8" });
+  const configPath = process.argv[2] || "./config.yml";
+  console.log("Config path: ", configPath);
+  const fileContents = fs.readFileSync(configPath, { encoding: "utf-8" });
   const data = yaml.load(fileContents);
   return configSchema.parse(data);
 };
