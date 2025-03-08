@@ -1,0 +1,11 @@
+services:
+  onebot-ws-filter:
+    container_name: onebot-ws-filter
+    build: .
+    user: 1000:1000 # The uid and gid for running the app
+    ports:
+      - 127.0.0.1:8001:8001 # For bot outside the network
+    hostname: obwsfilter
+    volumes:
+      - ./:/app/config # Path containing `config.yml`
+    restart: unless-stopped
