@@ -1,6 +1,7 @@
 /.yarn/
 /.vscode/
 /out/
+/dist/
 
 yarn.lock
 

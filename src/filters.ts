@@ -1,5 +1,5 @@
 import { Logger } from "tslog";
-import WebSocket from "ws";
+import WebSocket, { WebSocketServer } from "ws";
 
 import {
   BaseFilterConfig,
@@ -58,7 +58,7 @@ export class ForwardWsFilter extends Filter {
   constructor(config: ForwardWsFilterConfig, logging_config: LoggingConfig) {
     super(config, logging_config);
 
-    const server = new WebSocket.Server({ port: config.forwardListenPort });
+    const server = new WebSocketServer({ port: config.forwardListenPort });
     server.on("error", errorHandler(this.logger, "client side"));
 
     server.on("connection", (clientSocket) => {
@@ -112,7 +112,7 @@ export class ForwardWsFilter extends Filter {
     });
 
     this.logger.info(
-      `Forward websocket proxy server is running on ${config.forwardListenPort}`
+      `Forward websocket proxy server is running on ${config.forwardListenPort}`,
     );
   }
 }
@@ -121,7 +121,7 @@ export class ReverseWsFilter extends Filter {
   constructor(config: ReverseWsFilterConfig, logging_config: LoggingConfig) {
     super(config, logging_config);
 
-    const server = new WebSocket.Server({
+    const server = new WebSocketServer({
       port: config.reverseListenPort,
       path: config.reverseListenPath,
     });
@@ -180,7 +180,7 @@ export class ReverseWsFilter extends Filter {
     });
 
     this.logger.info(
-      `Reverse websocket proxy server is running on ${config.reverseListenPort}${config.reverseListenPath}`
+      `Reverse websocket proxy server is running on ${config.reverseListenPort}${config.reverseListenPath}`,
     );
   }
 }

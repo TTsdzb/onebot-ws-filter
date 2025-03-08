@@ -6,11 +6,13 @@
   "scripts": {
     "build": "yarn exec tsc",
     "start": "node ./out/index.js",
-    "dev": "yarn build && yarn start"
+    "dev": "yarn build && yarn start",
+    "dist": "esbuild src/index.ts --bundle --platform=node --outfile=dist/onebot-ws-filter.js"
   },
   "devDependencies": {
     "@types/js-yaml": "^4",
     "@types/ws": "^8",
+    "esbuild": "^0.25.0",
     "prettier": "^3.3.3"
   },
   "dependencies": {
